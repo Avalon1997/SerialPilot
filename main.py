@@ -7,7 +7,31 @@
 @Last Modified  : 2025/8/25
 """
 # ------------------------------      Import     ------------------------------
+import sys
 
+from PySide6.QtWidgets import QApplication
+
+from src.serial.serial_manager import SerialManager
+from src.ui.custom.serial_widget import SerialWidget
 # ------------------------------ Variable define ------------------------------
 
 # ------------------------------ Function define ------------------------------
+
+def main():
+    serial_manager = SerialManager()
+    # print("Creating QApplication")
+    app = QApplication(sys.argv)
+    try:
+        window = SerialWidget(serial_manager)
+        window.show()
+        app.exec()
+    except Exception as e:
+        if window:
+            window.show_warning(f"Program starting failed:\n{str(e)}")
+        else:
+            from PySide6.QtWidgets import QMessageBox
+            QMessageBox.critical(None, "Fatal Error", f"Program starting failed:\n{str(e)}")
+
+
+if __name__ == "__main__":
+    main()
